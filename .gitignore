@@ -1,0 +1,17 @@
+*.log
+.idea/
+*.log
+*.iml
+*.ipr
+*.iws
+.classpath
+*.swp
+.settings
+.project
+target/
+target-*/
+web-app/WEB-INF/classes
+.DS_Store
+\"/
+*.db
+out
