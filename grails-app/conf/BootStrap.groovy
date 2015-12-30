@@ -7,23 +7,24 @@ import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
+import org.springframework.messaging.simp.SimpMessagingTemplate
+
+import javax.servlet.ServletContext
 
 class BootStrap {
 
     def grailsApplication
-    static int lightsRoom = 0
-    static int lightsBedroom = 0
-    static int lightsKitchen = 0
+    SimpMessagingTemplate brokerMessagingTemplate
 
-    def init = { servletContext ->
+    def init = { ServletContext servletContext ->
         switch (Environment.getCurrent()){
             case Environment.DEVELOPMENT:
-                initData()
+                initData(servletContext)
                 break;
             case Environment.TEST:
                 break
             case Environment.PRODUCTION:
-                initData()
+                initData(servletContext)
                 break
         }
     }
@@ -31,7 +32,7 @@ class BootStrap {
     def destroy = {
     }
 
-    void initData() {
+    void initData(ServletContext servletContext) {
         def dataStore = new MemoryPersistence()
         def conOpt = new MqttConnectOptions()
         conOpt.setCleanSession(true)
@@ -54,22 +55,28 @@ class BootStrap {
                         humidity = humidity.setScale(1, BigDecimal.ROUND_HALF_UP)
                         new SensorData(name: 'humidity', valueOf: humidity.doubleValue()).save(flush: true)
                     }
+
+                    brokerMessagingTemplate.convertAndSend '/topic/sensors/status', json
                 } else if (s.equals('switches/status')) {
                     def json = JSON.parse(new ByteArrayInputStream(mqttMessage.payload), 'UTF-8')
 
-                    println json
+                    brokerMessagingTemplate.convertAndSend '/topic/switches/status', json
 
-                    lightsRoom = json.room
-                    lightsBedroom = json.bedroom
-                    lightsKitchen = json.kitchen
+                    servletContext.setAttribute("lightsRoom", json.room)
+                    servletContext.setAttribute("lightsBedroom", json.bedroom)
+                    servletContext.setAttribute("lightsKitchen", json.kitchen)
                 } else if (s.equals('buttons/room')) {
+                    def lightsRoom = servletContext.getAttribute('lightsRoom') ?: 0
                     connectAndPublish('lights/room/set', lightsRoom == 1 ? '0' : '1')
                 } else if (s.equals('buttons/bedroom')) {
+                    def lightsBedroom = servletContext.getAttribute('lightsBedroom') ?: 0
                     connectAndPublish('lights/bedroom/set', lightsBedroom == 1 ? '0' : '1')
                 } else if (s.equals('buttons/kitchen')) {
+                    def lightsKitchen = servletContext.getAttribute('lightsKitchen') ?: 0
                     connectAndPublish('lights/kitchen/set', lightsKitchen == 1 ? '0' : '1')
                 }
             }
+
             @Override
             void connectionLost(Throwable throwable) {
                 println 'connectionLost ' + throwable.printStackTrace()
@@ -80,9 +87,11 @@ class BootStrap {
             }
         })
         mqttClient.connect(conOpt)
+
         mqttClient.subscribe('buttons/room', 0)
         mqttClient.subscribe('buttons/bedroom', 0)
         mqttClient.subscribe('buttons/kitchen', 0)
+
         mqttClient.subscribe('sensors/status', 0)
         mqttClient.subscribe('switches/status', 0)
     }

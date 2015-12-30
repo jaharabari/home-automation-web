@@ -4,21 +4,37 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Automation Web</title>
+    <title>Home Automation Web - Gráficos</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,700,300,100' rel='stylesheet' type='text/css'>
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <link href="${resource(dir: 'css', file: 'font-awesome.min.css')}" rel="stylesheet">
 
-    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-    <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
-    <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
-    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="${resource(dir: 'js', file: 'chart.js')}"></script>
-    <script type="text/javascript" src="${resource(dir: 'js', file: 'moment.js')}"></script>
+    <script src="${resource(dir: 'js', file: 'jquery-1.11.3.min.js')}" type="text/javascript"></script>
+    <script src="${resource(dir: 'js', file: 'jquery-ui.min.js')}" type="text/javascript"></script>
+
+    <link href="${resource(dir: 'css', file: 'jquery-ui.min.css')}" rel="stylesheet">
+    <link href="${resource(dir: 'css', file: 'jquery-ui.theme.min.css')}" rel="stylesheet">
+
+    <link href="${resource(dir: 'css', file: 'bootstrap.min.css')}" rel="stylesheet">
+    <link href="${resource(dir: 'css', file: 'bootstrap-theme.min.css')}" rel="stylesheet">
+    <script src="${resource(dir: 'js', file: 'bootstrap.min.js')}" type="text/javascript"></script>
+
+    <link href="${resource(dir: 'css', file: 'theme.css')}" rel="stylesheet">
+
+    <script src="${resource(dir: 'js', file: 'chart.js')}" type="text/javascript"></script>
+    <script src="${resource(dir: 'js', file: 'moment.js')}" type="text/javascript"></script>
+
+    <asset:javascript src="spring-websocket" />
 
     <script>
         $(function() {
+            var socket = new SockJS("${createLink(uri: '/stomp')}");
+            var client = Stomp.over(socket);
+            client.connect({}, function() {
+                client.subscribe("/topic/sensors/status", function(message) {
+                    console.log("STATUS: " + message.body);
+                });
+            });
+
             $("#startdate").datepicker({
                 defaultDate: "-1d",
                 changeMonth: true,
@@ -40,11 +56,25 @@
 </head>
 <body>
 
-<div class="navbar">
-    <div class="navbar-inner">
-        <a class="brand" href="#">Gráfico de Temperatura/Umidade</a>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Abrir navegação</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Automação</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><g:link uri="/">Home</g:link></li>
+                <li class="active"><g:link controller="home" action="charts">Gráficos</g:link></li>
+            </ul>
+        </div><!--/.nav-collapse -->
     </div>
-</div>
+</nav>
 
 <div id="main" class="container">
     <form action="/" id="searchForm">

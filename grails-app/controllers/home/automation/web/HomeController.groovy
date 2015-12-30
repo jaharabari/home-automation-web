@@ -27,8 +27,8 @@ class HomeController {
     }
 
     def publish() {
-        def topic = "lights/room1"
-        def content = "0"
+        def topic = params.topic
+        def content = params.message
         def qos = 0
         def persistence = new MemoryPersistence()
 
@@ -50,8 +50,14 @@ class HomeController {
             println "Message published"
 
             client.disconnect()
+
+            def result = [error: 0, payload: '']
+            render result as JSON
         } catch(MqttException me) {
             me.printStackTrace()
+
+            def result = [error: 1, payload: me.message]
+            render result as JSON
         }
     }
 }
