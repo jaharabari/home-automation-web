@@ -12,6 +12,18 @@ class HomeController {
     def grailsApplication
 
     def index() {
+        def temperature = null
+        def humidity = null
+
+        def temperatures = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name order by sd.dateCreated desc', [name: 'temperature'], [max: 1])
+        if (!temperatures.isEmpty())
+            temperature = temperatures.get(0).valueOf
+
+        def humidities = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name order by sd.dateCreated desc', [name: 'humidity'], [max: 1])
+        if (!humidities.isEmpty())
+            humidity = humidities.get(0).valueOf
+
+        [temperature: temperature, humidity: humidity]
     }
 
     def charts() {
@@ -38,17 +50,10 @@ class HomeController {
                     persistence)
             def connOpts = new MqttConnectOptions()
             connOpts.setCleanSession(true)
-
-            println "Connecting to broker: ${grailsApplication.config.grails.mqtt.brokerUrl}"
             client.connect(connOpts)
-            println "Connected"
-
-            println "Publishing message: ${content}"
             def message = new MqttMessage(content.getBytes())
             message.setQos(qos)
             client.publish(topic, message)
-            println "Message published"
-
             client.disconnect()
 
             def result = [error: 0, payload: '']
