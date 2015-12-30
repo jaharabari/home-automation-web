@@ -12,7 +12,9 @@ class HomeController {
     def grailsApplication
 
     def index() {
+    }
 
+    def charts() {
     }
 
     def chartData() {
