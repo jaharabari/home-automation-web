@@ -12,8 +12,8 @@ class HomeController {
     def grailsApplication
 
     def index() {
-        def temperature = null
-        def humidity = null
+        def temperature = 0
+        def humidity = 0
 
         def temperatures = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name order by sd.dateCreated desc', [name: 'temperature'], [max: 1])
         if (!temperatures.isEmpty())
@@ -31,7 +31,9 @@ class HomeController {
 
     def chartData() {
         def name = params.switchValue.equals('Umidade') ? 'humidity' : 'temperature'
-        def list = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name order by sd.dateCreated asc', [name: name], [max: 25]).collect{
+        def start = new Date(params.long('start'))
+        def end = new Date(params.long('end'))
+        def list = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name and sd.dateCreated >= :start and sd.dateCreated <= :end order by sd.dateCreated asc', [name: name, start: start, end: end], [max: 25]).collect{
             [value: it.valueOf, time: it.dateCreated.time]
         }
         def result = [error: 0, payload: list]
