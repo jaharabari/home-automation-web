@@ -57,34 +57,97 @@
                 <div class="panel-body">
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Estado</th>
-                            <th>Ações</th>
-                        </tr>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Estado</th>
+                                <th>Ações</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Luz sala</td>
-                            <td>
-                                <span id="lights_room" class="label"></span>
-                            </td>
-                            <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/room/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/room/set" data-message="0">Off</button></td>
-                        </tr>
-                        <tr>
-                            <td>Luz quarto</td>
-                            <td>
-                                <span id="lights_bedroom" class="label"></span>
-                            </td>
-                            <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/bedroom/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/bedroom/set" data-message="0">Off</button></td>
-                        </tr>
-                        <tr>
-                            <td>Luz cozinha</td>
-                            <td>
-                                <span id="lights_kitchen" class="label"></span>
-                            </td>
-                            <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/kitchen/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/kitchen/set" data-message="0">Off</button></td>
-                        </tr>
+                            <tr>
+                                <td>Luz varanda sala</td>
+                                <td>
+                                    <span id="lights_room_porch" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/room_porch/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/room_porch/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz sala</td>
+                                <td>
+                                    <span id="lights_room" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/room/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/room/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz sala-cozinha</td>
+                                <td>
+                                    <span id="lights_room_kitchen" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/room_kitchen/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/room_kitchen/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz cozinha</td>
+                                <td>
+                                    <span id="lights_kitchen" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/kitchen/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/kitchen/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz banheiro</td>
+                                <td>
+                                    <span id="lights_bathroom" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/bathroom/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/bathroom/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz banheiro-espelho</td>
+                                <td>
+                                    <span id="lights_bathroom_mirror" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/bathroom_mirror/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/bathroom_mirror/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz corredor</td>
+                                <td>
+                                    <span id="lights_hall" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/hall/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/hall/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz entrada</td>
+                                <td>
+                                    <span id="lights_front_porch" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/front_porch/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/front_porch/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz quarto</td>
+                                <td>
+                                    <span id="lights_bedroom" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/bedroom/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/bedroom/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz varanda quarto</td>
+                                <td>
+                                    <span id="lights_bedroom_porch" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/bedroom_porch/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/bedroom_porch/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz quarto superior</td>
+                                <td>
+                                    <span id="lights_upper_bedroom" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/upper_bedroom/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/upper_bedroom/set" data-message="0">Off</button></td>
+                            </tr>
+                            <tr>
+                                <td>Luz área de serviço</td>
+                                <td>
+                                    <span id="lights_laundry" class="label"></span>
+                                </td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="lights/laundry/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="lights/laundry/set" data-message="0">Off</button></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
