@@ -172,18 +172,42 @@
     var humiGauge;
 
     $(function() {
-        toggleStatusLabel('lights_room', ${application.lightsRoom == 1});
-        toggleStatusLabel('lights_bedroom', ${application.lightsBedroom == 1});
-        toggleStatusLabel('lights_kitchen', ${application.lightsKitchen == 1});
+        toggleStatusLabel('lights_room_balcony', ${application.lights_room_balcony == 1});
+        toggleStatusLabel('lights_room', ${application.lights_room == 1});
+        toggleStatusLabel('lights_room_kitchen', ${application.lights_room_kitchen == 1});
+        toggleStatusLabel('lights_kitchen', ${application.lights_kitchen == 1});
+        toggleStatusLabel('lights_bathroom', ${application.lights_bathroom == 1});
+        toggleStatusLabel('lights_bathroom_mirror', ${application.lights_bathroom_mirror == 1});
+        toggleStatusLabel('lights_hall', ${application.lights_hall == 1});
+        toggleStatusLabel('lights_entry_balcony', ${application.lights_entry_balcony == 1});
+        toggleStatusLabel('lights_bedroom', ${application.lights_bedroom == 1});
+        toggleStatusLabel('lights_bedroom_balcony', ${application.lights_bedroom_balcony == 1});
+        toggleStatusLabel('lights_upper_bedroom', ${application.lights_upper_bedroom == 1});
+        toggleStatusLabel('lights_service_area', ${application.lights_service_area == 1});
+        toggleStatusLabel('lights_green_roof', ${application.lights_green_roof == 1});
+        toggleStatusLabel('sockets_bedroom_left', ${application.sockets_bedroom_left == 1});
+        toggleStatusLabel('sockets_bedroom_right', ${application.sockets_bedroom_right == 1});
 
         var socket = new SockJS("${createLink(uri: '/stomp')}");
         var client = Stomp.over(socket);
         client.connect({}, function() {
             client.subscribe("/topic/switches/status", function(message) {
                 var data = JSON.parse(message.body);
-                toggleStatusLabel('lights_room', data.room == 1);
-                toggleStatusLabel('lights_bedroom', data.bedroom == 1);
-                toggleStatusLabel('lights_kitchen', data.kitchen == 1);
+                toggleStatusLabel('lights_room_balcony', data.lights_room_balcony == 1);
+                toggleStatusLabel('lights_room', data.lights_room == 1);
+                toggleStatusLabel('lights_room_kitchen', data.lights_room_kitchen == 1);
+                toggleStatusLabel('lights_kitchen', data.lights_kitchen == 1);
+                toggleStatusLabel('lights_bathroom', data.lights_bathroom == 1);
+                toggleStatusLabel('lights_bathroom_mirror', data.lights_bathroom_mirror == 1);
+                toggleStatusLabel('lights_hall', data.lights_hall == 1);
+                toggleStatusLabel('lights_entry_balcony', data.lights_entry_balcony == 1);
+                toggleStatusLabel('lights_bedroom', data.lights_bedroom == 1);
+                toggleStatusLabel('lights_bedroom_balcony', data.lights_bedroom_balcony == 1);
+                toggleStatusLabel('lights_upper_bedroom', data.lights_upper_bedroom == 1);
+                toggleStatusLabel('lights_service_area', data.lights_service_area == 1);
+                toggleStatusLabel('lights_green_roof', data.lights_green_roof == 1);
+                toggleStatusLabel('sockets_bedroom_left', data.sockets_bedroom_left == 1);
+                toggleStatusLabel('sockets_bedroom_right', data.sockets_bedroom_right == 1);
             });
             client.subscribe("/topic/sensors/status", function(message) {
                 var data = JSON.parse(message.body);

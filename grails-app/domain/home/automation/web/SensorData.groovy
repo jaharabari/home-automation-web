@@ -4,10 +4,10 @@ class SensorData {
 
     String name
     Double valueOf = 0
-    Date dateCreated
+    Date dateHappened
 
     static mapping = {
-        sort "dateCreated"
+        sort "dateHappened"
         version false
     }
 }

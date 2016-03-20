@@ -116,5 +116,5 @@ log4j.main = {
            'net.sf.ehcache.hibernate'
 }
 
-grails.mqtt.brokerUrl = 'tcp://localhost:1883'
+grails.mqtt.brokerUrl = 'tcp://192.168.0.105:1883'
 grails.mqtt.clientId = 'home-automation-web'

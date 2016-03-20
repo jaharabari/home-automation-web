@@ -15,11 +15,11 @@ class HomeController {
         def temperature = 0
         def humidity = 0
 
-        def temperatures = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name order by sd.dateCreated desc', [name: 'temperature'], [max: 1])
+        def temperatures = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name order by sd.dateHappened desc', [name: 'temperature'], [max: 1])
         if (!temperatures.isEmpty())
             temperature = temperatures.get(0).valueOf
 
-        def humidities = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name order by sd.dateCreated desc', [name: 'humidity'], [max: 1])
+        def humidities = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name order by sd.dateHappened desc', [name: 'humidity'], [max: 1])
         if (!humidities.isEmpty())
             humidity = humidities.get(0).valueOf
 
@@ -30,13 +30,15 @@ class HomeController {
     }
 
     def chartData() {
-        def name = params.switchValue.equals('Umidade') ? 'humidity' : 'temperature'
-        def start = new Date(params.long('start'))
-        def end = new Date(params.long('end'))
-        def list = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name and sd.dateCreated >= :start and sd.dateCreated <= :end order by sd.dateCreated asc', [name: name, start: start, end: end], [max: 25]).collect{
-            [value: it.valueOf, time: it.dateCreated.time]
+        def start = params.date('start', 'dd/MM/yyyy HH:mm')
+        def end = params.date('end', 'dd/MM/yyyy HH:mm')
+        def temperatures = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name and sd.dateHappened >= :start and sd.dateHappened <= :end order by sd.dateHappened asc', [name: 'temperature', start: start, end: end], [max: 500]).collect{
+            [value: it.valueOf, time: it.dateHappened.format('dd/MM/yy HH:mm:ss')]
         }
-        def result = [error: 0, payload: list]
+        def humidities = SensorData.executeQuery('select sd from SensorData as sd where sd.name = :name and sd.dateHappened >= :start and sd.dateHappened <= :end order by sd.dateHappened asc', [name: 'humidity', start: start, end: end], [max: 500]).collect{
+            [value: it.valueOf, time: it.dateHappened.format('dd/MM/yy HH:mm:ss')]
+        }
+        def result = [error: 0, payload: [temperatures: temperatures, humidities: humidities]]
         render result as JSON
     }
 
