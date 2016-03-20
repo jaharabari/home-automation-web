@@ -88,7 +88,6 @@ class BootStrap {
                     servletContext.setAttribute(Constants.lights_kitchen, json.lights_kitchen)
                     servletContext.setAttribute(Constants.lights_bathroom, json.lights_bathroom)
                     servletContext.setAttribute(Constants.lights_bathroom_mirror, json.lights_bathroom_mirror)
-                    servletContext.setAttribute(Constants.lights_hall, json.lights_hall)
                     servletContext.setAttribute(Constants.lights_entry_balcony, json.lights_entry_balcony)
                     servletContext.setAttribute(Constants.lights_bedroom, json.lights_bedroom)
                     servletContext.setAttribute(Constants.lights_bedroom_balcony, json.lights_bedroom_balcony)
@@ -115,9 +114,6 @@ class BootStrap {
                 } else if (s.equals('buttons/'+ Constants.lights_bathroom_mirror)) {
                     def value = servletContext.getAttribute(Constants.lights_bathroom_mirror) ?: 0
                     connectAndPublish('relays/' + Constants.lights_bathroom_mirror +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.lights_hall)) {
-                    def value = servletContext.getAttribute(Constants.lights_hall) ?: 0
-                    connectAndPublish('relays/' + Constants.lights_hall +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/'+ Constants.lights_entry_balcony)) {
                     def value = servletContext.getAttribute(Constants.lights_entry_balcony) ?: 0
                     connectAndPublish('relays/' + Constants.lights_entry_balcony +'/set', value == 1 ? '0' : '1')
@@ -202,7 +198,6 @@ class BootStrap {
         mqttClient.subscribe('buttons/' + Constants.lights_kitchen, 0)
         mqttClient.subscribe('buttons/' + Constants.lights_bathroom, 0)
         mqttClient.subscribe('buttons/' + Constants.lights_bathroom_mirror, 0)
-        mqttClient.subscribe('buttons/' + Constants.lights_hall, 0)
         mqttClient.subscribe('buttons/' + Constants.lights_entry_balcony, 0)
         mqttClient.subscribe('buttons/' + Constants.lights_bedroom, 0)
         mqttClient.subscribe('buttons/' + Constants.lights_bedroom_balcony, 0)

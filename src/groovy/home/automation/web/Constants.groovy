@@ -8,7 +8,6 @@ class Constants {
     public static final String lights_kitchen = "lights_kitchen"
     public static final String lights_bathroom = "lights_bathroom"
     public static final String lights_bathroom_mirror = "lights_bathroom_mirror"
-    public static final String lights_hall = "lights_hall"
     public static final String lights_entry_balcony = "lights_entry_balcony"
     public static final String lights_bedroom = "lights_bedroom"
     public static final String lights_bedroom_balcony = "lights_bedroom_balcony"
