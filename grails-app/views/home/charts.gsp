@@ -32,6 +32,9 @@
                 lang: {
                     months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agsto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
                     weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+                },
+                global : {
+                    useUTC: false
                 }
             });
 
