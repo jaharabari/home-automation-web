@@ -88,10 +88,16 @@ grails.hibernate.osiv.readonly = false
 environments {
     development {
         grails.logging.jul.usebridge = true
+
+        grails.mqtt.brokerUrl = 'tcp://192.168.0.105:1883'
+        grails.mqtt.clientId = 'home-automation-web-dev'
     }
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
+
+        grails.mqtt.brokerUrl = 'tcp://192.168.0.105:1883'
+        grails.mqtt.clientId = 'home-automation-web'
     }
 }
 
@@ -115,6 +121,3 @@ log4j.main = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
-
-grails.mqtt.brokerUrl = 'tcp://192.168.0.105:1883'
-grails.mqtt.clientId = 'home-automation-web'

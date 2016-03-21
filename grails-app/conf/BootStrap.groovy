@@ -127,7 +127,11 @@ class BootStrap {
 
             @Override
             void connectionLost(Throwable throwable) {
-                println 'connectionLost'
+                println 'connectionLost '
+
+                if (throwable)
+                    throwable.printStackTrace()
+
                 sleep(1000)
 
                 try {

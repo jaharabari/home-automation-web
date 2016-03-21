@@ -69,98 +69,168 @@
                                 <td>
                                     <span id="lights_room_balcony" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_room_balcony/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_room_balcony/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_room_balcony/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_room_balcony/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz sala</td>
                                 <td>
                                     <span id="lights_room" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_room/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_room/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_room/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_room/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz sala-cozinha</td>
                                 <td>
                                     <span id="lights_room_kitchen" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_room_kitchen/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_room_kitchen/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_room_kitchen/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_room_kitchen/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz cozinha</td>
                                 <td>
                                     <span id="lights_kitchen" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_kitchen/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_kitchen/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_kitchen/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_kitchen/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz banheiro</td>
                                 <td>
                                     <span id="lights_bathroom" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_bathroom/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_bathroom/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_bathroom/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_bathroom/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz banheiro-espelho</td>
                                 <td>
                                     <span id="lights_bathroom_mirror" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_bathroom_mirror/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_bathroom_mirror/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_bathroom_mirror/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_bathroom_mirror/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz entrada</td>
                                 <td>
                                     <span id="lights_entry_balcony" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_entry_balcony/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_entry_balcony/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_entry_balcony/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_entry_balcony/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz quarto</td>
                                 <td>
                                     <span id="lights_bedroom" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_bedroom/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_bedroom/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_bedroom/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_bedroom/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz varanda quarto</td>
                                 <td>
                                     <span id="lights_bedroom_balcony" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_bedroom_balcony/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_bedroom_balcony/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_bedroom_balcony/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_bedroom_balcony/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz quarto superior</td>
                                 <td>
                                     <span id="lights_upper_bedroom" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_upper_bedroom/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_upper_bedroom/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_upper_bedroom/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_upper_bedroom/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz área de serviço</td>
                                 <td>
                                     <span id="lights_service_area" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_service_area/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_service_area/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_service_area/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_service_area/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Luz telhado verde</td>
                                 <td>
                                     <span id="lights_green_roof" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_green_roof/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_green_roof/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_green_roof/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_green_roof/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Tomada esquerda cama</td>
                                 <td>
                                     <span id="sockets_bedroom_left" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/sockets_bedroom_left/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/sockets_bedroom_left/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/sockets_bedroom_left/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/sockets_bedroom_left/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Tomada direita cama</td>
                                 <td>
                                     <span id="sockets_bedroom_right" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/sockets_bedroom_right/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/sockets_bedroom_right/set" data-message="0">Off</button></td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary action" data-topic="relays/sockets_bedroom_right/set" data-message="1">On</button>
+                                        <button type="button" class="btn btn-sm btn-default action" data-topic="relays/sockets_bedroom_right/set" data-message="0">Off</button>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
