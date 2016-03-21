@@ -132,7 +132,7 @@
                                 <td>
                                     <span id="lights_upper_bedroom" class="label"></span>
                                 </td>
-                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_bedroom_balcony/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_bedroom_balcony/set" data-message="0">Off</button></td>
+                                <td><button type="button" class="btn btn-sm btn-primary action" data-topic="relays/lights_upper_bedroom/set" data-message="1">On</button> <button type="button" class="btn btn-sm btn-default action" data-topic="relays/lights_upper_bedroom/set" data-message="0">Off</button></td>
                             </tr>
                             <tr>
                                 <td>Luz área de serviço</td>
