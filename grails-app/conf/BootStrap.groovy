@@ -22,6 +22,7 @@ class BootStrap {
         switch (Environment.getCurrent()){
             case Environment.DEVELOPMENT:
                 initData(servletContext)
+                initDevelopmentData()
                 break;
             case Environment.TEST:
                 break
@@ -35,23 +36,6 @@ class BootStrap {
     }
 
     void initData(ServletContext servletContext) {
-        def random = new Random()
-        def minTemp = 20d
-        def maxTemp = 31d
-        def minHumid = 50d
-        def maxHumid = 90d
-
-        (0..336).each {
-            def date = new DateTime().plusMinutes((it - 336) * 30)
-            def temperature = new BigDecimal(randomInRange(random, minTemp, maxTemp))
-            temperature = temperature.setScale(1, BigDecimal.ROUND_HALF_UP)
-            new SensorData(name: 'temperature', valueOf: temperature.doubleValue(), dateHappened: date.toDate()).save(flush: true)
-
-            def humidity = new BigDecimal(randomInRange(random, minHumid, maxHumid))
-            humidity = humidity.setScale(1, BigDecimal.ROUND_HALF_UP)
-            new SensorData(name: 'humidity', valueOf: humidity.doubleValue(), dateHappened: date.toDate()).save(flush: true)
-        }
-
         def dataStore = new MemoryPersistence()
         def conOpt = new MqttConnectOptions()
         conOpt.setCleanSession(true)
@@ -222,6 +206,25 @@ class BootStrap {
         message.setQos(0)
         client.publish(topic, message)
         client.disconnect()
+    }
+
+    void initDevelopmentData() {
+        def random = new Random()
+        def minTemp = 20d
+        def maxTemp = 31d
+        def minHumid = 50d
+        def maxHumid = 90d
+
+        (0..336).each {
+            def date = new DateTime().plusMinutes((it - 336) * 30)
+            def temperature = new BigDecimal(randomInRange(random, minTemp, maxTemp))
+            temperature = temperature.setScale(1, BigDecimal.ROUND_HALF_UP)
+            new SensorData(name: 'temperature', valueOf: temperature.doubleValue(), dateHappened: date.toDate()).save(flush: true)
+
+            def humidity = new BigDecimal(randomInRange(random, minHumid, maxHumid))
+            humidity = humidity.setScale(1, BigDecimal.ROUND_HALF_UP)
+            new SensorData(name: 'humidity', valueOf: humidity.doubleValue(), dateHappened: date.toDate()).save(flush: true)
+        }
     }
 
     public static double randomInRange(Random random, double min, double max) {
