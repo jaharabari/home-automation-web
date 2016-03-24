@@ -1,4 +1,3 @@
-import grails.converters.JSON
 import grails.util.Environment
 import home.automation.web.Constants
 import home.automation.web.SensorData
@@ -17,6 +16,7 @@ class BootStrap {
 
     def grailsApplication
     SimpMessagingTemplate brokerMessagingTemplate
+    def isFirstRun = true
 
     def init = { ServletContext servletContext ->
         switch (Environment.getCurrent()){
@@ -36,6 +36,8 @@ class BootStrap {
     }
 
     void initData(ServletContext servletContext) {
+        isFirstRun = SensorData.count == 0
+
         def dataStore = new MemoryPersistence()
         def conOpt = new MqttConnectOptions()
         conOpt.setCleanSession(true)
@@ -48,21 +50,41 @@ class BootStrap {
             void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
                 def date = new Date()
                 println date.format('yyyy-MM-dd-HH-mm-ss') + ' mqtt_messageArrived:' + s
-                if (s.equals('sensors/status')) {
-                    def json = JSON.parse(new ByteArrayInputStream(mqttMessage.payload), 'UTF-8')
+                if (s.equals('sensors/temperature')) {
+                    def str = new String(mqttMessage.payload)
                     SensorData.withNewSession {
-                        def temperature = new BigDecimal(json.temperature)
-                        temperature = temperature.setScale(1, BigDecimal.ROUND_HALF_UP)
-                        new SensorData(name: 'temperature', valueOf: temperature.doubleValue(), dateHappened: date).save(flush: true)
-
-                        def humidity = new BigDecimal(json.humidity)
-                        humidity = humidity.setScale(1, BigDecimal.ROUND_HALF_UP)
-                        new SensorData(name: 'humidity', valueOf: humidity.doubleValue(), dateHappened: date).save(flush: true)
+                        def value = new BigDecimal(Double.parseDouble(str.trim()))
+                        value = value.setScale(1, BigDecimal.ROUND_HALF_UP)
+                        new SensorData(name: 'temperature', valueOf: value.doubleValue(), dateHappened: date).save(flush: true)
                     }
-
-                    brokerMessagingTemplate.convertAndSend '/topic/sensors/status', json
+                    brokerMessagingTemplate.convertAndSend '/topic/sensors/temperature', str.trim()
+                } else if (s.equals('sensors/humidity')) {
+                    def str = new String(mqttMessage.payload)
+                    SensorData.withNewSession {
+                        def value = new BigDecimal(Double.parseDouble(str.trim()))
+                        value = value.setScale(1, BigDecimal.ROUND_HALF_UP)
+                        new SensorData(name: 'humidity', valueOf: value.doubleValue(), dateHappened: date).save(flush: true)
+                    }
+                    brokerMessagingTemplate.convertAndSend '/topic/sensors/humidity', str.trim()
                 } else if (s.equals('switches/status')) {
-                    def json = JSON.parse(new ByteArrayInputStream(mqttMessage.payload), 'UTF-8')
+                    def payload = mqttMessage.payload
+
+                    def json = [
+                        lights_room_balcony: payload[0],
+                        lights_room: payload[1],
+                        lights_room_kitchen: payload[2],
+                        lights_kitchen: payload[3],
+                        lights_bathroom: payload[4],
+                        lights_bathroom_mirror: payload[5],
+                        lights_entry_balcony: payload[6],
+                        lights_bedroom: payload[7],
+                        lights_bedroom_balcony: payload[8],
+                        lights_upper_bedroom: payload[9],
+                        lights_service_area: payload[10],
+                        lights_green_roof: payload[11],
+                        sockets_bedroom_left: payload[12],
+                        sockets_bedroom_right: payload[13]
+                    ]
 
                     brokerMessagingTemplate.convertAndSend '/topic/switches/status', json
 
@@ -194,7 +216,8 @@ class BootStrap {
         mqttClient.subscribe('buttons/' + Constants.lights_green_roof, 0)
         mqttClient.subscribe('buttons/' + Constants.sockets_bedroom_left, 0)
         mqttClient.subscribe('buttons/' + Constants.sockets_bedroom_right, 0)
-        mqttClient.subscribe('sensors/status', 0)
+        mqttClient.subscribe('sensors/temperature', 0)
+        mqttClient.subscribe('sensors/humidity', 0)
         mqttClient.subscribe('switches/status', 0)
     }
 
@@ -213,21 +236,23 @@ class BootStrap {
     }
 
     void initDevelopmentData() {
-        def random = new Random()
-        def minTemp = 20d
-        def maxTemp = 31d
-        def minHumid = 50d
-        def maxHumid = 90d
+        if (isFirstRun) {
+            def random = new Random()
+            def minTemp = 20d
+            def maxTemp = 31d
+            def minHumid = 50d
+            def maxHumid = 90d
 
-        (0..336).each {
-            def date = new DateTime().plusMinutes((it - 336) * 30)
-            def temperature = new BigDecimal(randomInRange(random, minTemp, maxTemp))
-            temperature = temperature.setScale(1, BigDecimal.ROUND_HALF_UP)
-            new SensorData(name: 'temperature', valueOf: temperature.doubleValue(), dateHappened: date.toDate()).save(flush: true)
+            (0..336).each {
+                def date = new DateTime().plusMinutes((it - 336) * 30)
+                def temperature = new BigDecimal(randomInRange(random, minTemp, maxTemp))
+                temperature = temperature.setScale(1, BigDecimal.ROUND_HALF_UP)
+                new SensorData(name: 'temperature', valueOf: temperature.doubleValue(), dateHappened: date.toDate()).save(flush: true)
 
-            def humidity = new BigDecimal(randomInRange(random, minHumid, maxHumid))
-            humidity = humidity.setScale(1, BigDecimal.ROUND_HALF_UP)
-            new SensorData(name: 'humidity', valueOf: humidity.doubleValue(), dateHappened: date.toDate()).save(flush: true)
+                def humidity = new BigDecimal(randomInRange(random, minHumid, maxHumid))
+                humidity = humidity.setScale(1, BigDecimal.ROUND_HALF_UP)
+                new SensorData(name: 'humidity', valueOf: humidity.doubleValue(), dateHappened: date.toDate()).save(flush: true)
+            }
         }
     }
 

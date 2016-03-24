@@ -291,10 +291,13 @@
                 toggleStatusLabel('sockets_bedroom_left', data.sockets_bedroom_left == 1);
                 toggleStatusLabel('sockets_bedroom_right', data.sockets_bedroom_right == 1);
             });
-            client.subscribe("/topic/sensors/status", function(message) {
-                var data = JSON.parse(message.body);
-                tempGauge.refresh(data.temperature);
-                humiGauge.refresh(data.humidity);
+            client.subscribe("/topic/sensors/temperature", function(message) {
+                console.log(message.body)
+                tempGauge.refresh(message.body);
+            });
+            client.subscribe("/topic/sensors/humidity", function(message) {
+                console.log(message.body)
+                humiGauge.refresh(message.body);
             });
         });
 
