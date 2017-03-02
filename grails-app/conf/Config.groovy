@@ -89,14 +89,14 @@ environments {
     development {
         grails.logging.jul.usebridge = true
 
-        grails.mqtt.brokerUrl = 'tcp://192.168.0.105:1883'
+        grails.mqtt.brokerUrl = 'tcp://localhost:1883'
         grails.mqtt.clientId = 'home-automation-web-dev'
     }
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
 
-        grails.mqtt.brokerUrl = 'tcp://192.168.0.105:1883'
+        grails.mqtt.brokerUrl = 'tcp://192.168.100.125:1883'
         grails.mqtt.clientId = 'home-automation-web'
     }
 }

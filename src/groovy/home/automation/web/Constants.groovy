@@ -1,19 +1,18 @@
 package home.automation.web
 
 class Constants {
+    public static final String room_porch = "room_porch"
+    public static final String room = "room"
+    public static final String counter = "counter"
+    public static final String kitchen = "kitchen"
+    public static final String bathroom = "bathroom"
+    public static final String corridor = "corridor"
+    public static final String entry = "entry"
+    public static final String bedroom = "bedroom"
+    public static final String bedroom_porch = "bedroom_porch"
+    public static final String laundry = "laundry"
+    public static final String upper = "upper"
+    public static final String recreation = "recreation"
 
-    public static final String lights_room_balcony = "lights_room_balcony"
-    public static final String lights_room = "lights_room"
-    public static final String lights_room_kitchen = "lights_room_kitchen"
-    public static final String lights_kitchen = "lights_kitchen"
-    public static final String lights_bathroom = "lights_bathroom"
-    public static final String lights_bathroom_mirror = "lights_bathroom_mirror"
-    public static final String lights_entry_balcony = "lights_entry_balcony"
-    public static final String lights_bedroom = "lights_bedroom"
-    public static final String lights_bedroom_balcony = "lights_bedroom_balcony"
-    public static final String lights_upper_bedroom = "lights_upper_bedroom"
-    public static final String lights_service_area = "lights_service_area"
-    public static final String lights_green_roof = "lights_green_roof"
-    public static final String sockets_bedroom_left = "sockets_bedroom_left"
-    public static final String sockets_bedroom_right = "sockets_bedroom_right"
+    private Constants() {}
 }
