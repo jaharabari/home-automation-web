@@ -52,7 +52,6 @@ class BootStrap {
                 (String) grailsApplication.config.grails.mqtt.clientId + '-sub',
                 dataStore)
         mqttClient.setCallback(new MqttCallback(){
-
             @Override
             void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
                 def date = new Date()
@@ -134,42 +133,54 @@ class BootStrap {
                     servletContext.setAttribute(Constants.laundry, json.laundry)
                     servletContext.setAttribute(Constants.upper, json.upper)
                     servletContext.setAttribute(Constants.recreation, json.recreation)
-                } else if (s.equals('buttons/'+ Constants.room_porch)) {
+                } else if (s.equals('buttons/room_out_1')) {
                     def value = servletContext.getAttribute(Constants.room_porch) ?: 0
                     connectAndPublish('relays/' + Constants.room_porch +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.room)) {
+                } else if (s.equals('buttons/room_out_2')) {
                     def value = servletContext.getAttribute(Constants.room) ?: 0
                     connectAndPublish('relays/' + Constants.room +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.counter)) {
+                } else if (s.equals('buttons/room_1')) {
                     def value = servletContext.getAttribute(Constants.counter) ?: 0
-                    connectAndPublish('relays/' + Constants.counter +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.kitchen)) {
-                    def value = servletContext.getAttribute(Constants.kitchen) ?: 0
                     connectAndPublish('relays/' + Constants.kitchen +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.bathroom)) {
+                } else if (s.equals('buttons/room_2')) {
+                    def value = servletContext.getAttribute(Constants.kitchen) ?: 0
+                    connectAndPublish('relays/' + Constants.counter +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/corridor_1')) {
                     def value = servletContext.getAttribute(Constants.bathroom) ?: 0
-                    connectAndPublish('relays/' + Constants.bathroom +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.corridor)) {
-                    def value = servletContext.getAttribute(Constants.corridor) ?: 0
-                    connectAndPublish('relays/' + Constants.corridor +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.entry)) {
-                    def value = servletContext.getAttribute(Constants.entry) ?: 0
                     connectAndPublish('relays/' + Constants.entry +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.bedroom)) {
+                } else if (s.equals('buttons/corridor_2')) {
+                    def value = servletContext.getAttribute(Constants.corridor) ?: 0
+                    connectAndPublish('relays/' + Constants.room +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/bathroom')) {
+                    def value = servletContext.getAttribute(Constants.entry) ?: 0
+                    connectAndPublish('relays/' + Constants.bathroom +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/entry')) {
                     def value = servletContext.getAttribute(Constants.bedroom) ?: 0
-                    connectAndPublish('relays/' + Constants.bedroom +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.bedroom_porch)) {
-                    def value = servletContext.getAttribute(Constants.bedroom_porch) ?: 0
+                    connectAndPublish('relays/' + Constants.entry +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/bedroom')) {
+                    def value = servletContext.getAttribute(Constants.bedroom) ?: 0
                     connectAndPublish('relays/' + Constants.bedroom_porch +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.laundry)) {
+                } else if (s.equals('buttons/bedroom_out_1')) {
                     def value = servletContext.getAttribute(Constants.laundry) ?: 0
-                    connectAndPublish('relays/' + Constants.laundry +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.upper)) {
+                    connectAndPublish('relays/' + Constants.bedroom_porch +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/bedroom_out_2')) {
                     def value = servletContext.getAttribute(Constants.upper) ?: 0
-                    connectAndPublish('relays/' + Constants.upper +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/'+ Constants.recreation)) {
+                    connectAndPublish('relays/' + Constants.bedroom +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/bed_left')) {
+                    def value = servletContext.getAttribute(Constants.recreation) ?: 0
+                    connectAndPublish('relays/' + Constants.bedroom +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/bed_right')) {
+                    def value = servletContext.getAttribute(Constants.recreation) ?: 0
+                    connectAndPublish('relays/' + Constants.bedroom +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/laundry')) {
+                    def value = servletContext.getAttribute(Constants.recreation) ?: 0
+                    connectAndPublish('relays/' + Constants.laundry +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/upper_1')) {
                     def value = servletContext.getAttribute(Constants.recreation) ?: 0
                     connectAndPublish('relays/' + Constants.recreation +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/upper_2')) {
+                    def value = servletContext.getAttribute(Constants.recreation) ?: 0
+                    connectAndPublish('relays/' + Constants.upper +'/set', value == 1 ? '0' : '1')
                 }
             }
 
@@ -228,18 +239,23 @@ class BootStrap {
     }
 
     private static void mqttSubscribeTopics(def mqttClient) {
-        mqttClient.subscribe('buttons/' + Constants.room_porch, 0)
-        mqttClient.subscribe('buttons/' + Constants.room, 0)
-        mqttClient.subscribe('buttons/' + Constants.counter, 0)
-        mqttClient.subscribe('buttons/' + Constants.kitchen, 0)
-        mqttClient.subscribe('buttons/' + Constants.bathroom, 0)
-        mqttClient.subscribe('buttons/' + Constants.corridor, 0)
-        mqttClient.subscribe('buttons/' + Constants.entry, 0)
-        mqttClient.subscribe('buttons/' + Constants.bedroom, 0)
-        mqttClient.subscribe('buttons/' + Constants.bedroom_porch, 0)
-        mqttClient.subscribe('buttons/' + Constants.laundry, 0)
-        mqttClient.subscribe('buttons/' + Constants.upper, 0)
-        mqttClient.subscribe('buttons/' + Constants.recreation, 0)
+        mqttClient.subscribe('buttons/room_out_1', 0)
+        mqttClient.subscribe('buttons/room_out_2', 0)
+        mqttClient.subscribe('buttons/room_1', 0)
+        mqttClient.subscribe('buttons/room_2', 0)
+        mqttClient.subscribe('buttons/corridor_1', 0)
+        mqttClient.subscribe('buttons/corridor_2', 0)
+        mqttClient.subscribe('buttons/bathroom', 0)
+        mqttClient.subscribe('buttons/bedroom', 0)
+        mqttClient.subscribe('buttons/bedroom_out_1', 0)
+        mqttClient.subscribe('buttons/bedroom_out_2', 0)
+        mqttClient.subscribe('buttons/bedroom_porch', 0)
+        mqttClient.subscribe('buttons/bed_left', 0)
+        mqttClient.subscribe('buttons/bed_right', 0)
+        mqttClient.subscribe('buttons/upper_1', 0)
+        mqttClient.subscribe('buttons/upper_2', 0)
+        mqttClient.subscribe('buttons/entry', 0)
+        mqttClient.subscribe('buttons/laundry', 0)
         mqttClient.subscribe('sensors/temperature', 0)
         mqttClient.subscribe('sensors/humidity', 0)
         mqttClient.subscribe('switches/status', 0)
