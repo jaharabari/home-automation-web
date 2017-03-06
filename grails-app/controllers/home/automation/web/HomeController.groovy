@@ -49,7 +49,8 @@ class HomeController {
         def persistence = new MemoryPersistence()
 
         try {
-            def client = new MqttClient((String) grailsApplication.config.grails.mqtt.brokerUrl,
+            def client = new MqttClient((String) grailsApplication.config.localmqtt.host + ":" +
+                    (String) grailsApplication.config.localmqtt.port,
                     (String) grailsApplication.config.grails.mqtt.clientId,
                     persistence)
             def connOpts = new MqttConnectOptions()

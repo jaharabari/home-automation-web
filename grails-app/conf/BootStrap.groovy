@@ -29,12 +29,14 @@ class BootStrap {
         switch (Environment.getCurrent()){
             case Environment.DEVELOPMENT:
                 initData(servletContext)
+                initDataCloud(servletContext)
                 initDevelopmentData()
                 break;
             case Environment.TEST:
                 break
             case Environment.PRODUCTION:
                 initData(servletContext)
+                initDataCloud(servletContext)
                 break
         }
     }
@@ -48,7 +50,8 @@ class BootStrap {
         def dataStore = new MemoryPersistence()
         def conOpt = new MqttConnectOptions()
         conOpt.setCleanSession(true)
-        final def mqttClient = new MqttClient((String) grailsApplication.config.grails.mqtt.brokerUrl,
+        final def mqttClient = new MqttClient((String) grailsApplication.config.localmqtt.host + ":" +
+                (String) grailsApplication.config.localmqtt.port,
                 (String) grailsApplication.config.grails.mqtt.clientId + '-sub',
                 dataStore)
         mqttClient.setCallback(new MqttCallback(){
@@ -186,7 +189,7 @@ class BootStrap {
 
             @Override
             void connectionLost(Throwable throwable) {
-                println 'connectionLost '
+                println 'mosquitto connectionLost '
 
                 if (throwable)
                     throwable.printStackTrace()
@@ -210,7 +213,7 @@ class BootStrap {
                 }
 
                 mqttSubscribeTopics(mqttClient)
-                println 'Connected'
+                println 'Connected mosquitto'
             }
 
             @Override
@@ -233,9 +236,116 @@ class BootStrap {
                 println e.getMessage()
             }
         }
-        println 'Connected'
+        println 'Connected mosquitto'
 
         mqttSubscribeTopics(mqttClient)
+    }
+
+    void initDataCloud(ServletContext servletContext) {
+        def dataStore = new MemoryPersistence()
+        def conOpt = new MqttConnectOptions()
+        conOpt.setCleanSession(true)
+        conOpt.setUserName(grailsApplication.config.cloudmqtt.user)
+        conOpt.setPassword(((String)grailsApplication.config.cloudmqtt.password).chars)
+        final def mqttClient = new MqttClient((String) grailsApplication.config.cloudmqtt.host + ":" +
+                (String) grailsApplication.config.cloudmqtt.port,
+                (String) grailsApplication.config.grails.mqtt.clientId + '-sub',
+                dataStore)
+        mqttClient.setCallback(new MqttCallback(){
+            @Override
+            void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
+                if (s.equals('relays/' + Constants.room_porch + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.room + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.entry + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.counter + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.corridor + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.bathroom + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.bedroom + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.bedroom_porch + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.laundry + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.upper + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.recreation + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                } else if (s.equals('relays/' + Constants.kitchen + '/set')) {
+                    def value = new String(mqttMessage.payload)
+                    connectAndPublish(s, value.equals('0') ? '0' : '1')
+                }
+            }
+
+            @Override
+            void connectionLost(Throwable throwable) {
+                println 'mqttcloud connectionLost '
+
+                if (throwable)
+                    throwable.printStackTrace()
+
+                sleep(1000)
+
+                try {
+                    mqttClient.connect(conOpt)
+                } catch (e) {
+                    println e.getMessage()
+                }
+
+                while (!mqttClient.isConnected()) {
+                    println 'Trying to connect to mqttcloud server...'
+                    sleep(1000)
+                    try {
+                        mqttClient.connect(conOpt)
+                    } catch (e) {
+                        println e.getMessage()
+                    }
+                }
+
+                println 'Connected mqttcloud'
+
+                mqttSubscribeRelaysTopics(mqttClient)
+            }
+
+            @Override
+            void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+            }
+        })
+
+        try {
+            mqttClient.connect(conOpt)
+        } catch (e) {
+            println e.getMessage()
+        }
+
+        while (!mqttClient.isConnected()) {
+            println 'Trying to connect to mqttcloud server...'
+            sleep(1000)
+            try {
+                mqttClient.connect(conOpt)
+            } catch (e) {
+                println e.getMessage()
+            }
+        }
+        println 'Connected mqttcloud'
+
+        mqttSubscribeRelaysTopics(mqttClient)
     }
 
     private static void mqttSubscribeTopics(def mqttClient) {
@@ -261,11 +371,15 @@ class BootStrap {
         mqttClient.subscribe('switches/status', 0)
     }
 
+    private static void mqttSubscribeRelaysTopics(def mqttClient) {
+        mqttClient.subscribe('relays/' + Constants.room_porch + '/set', 0)
+    }
+
     void connectAndPublish(String topic, String content) {
         def persistence = new MemoryPersistence()
-        def client = new MqttClient((String) grailsApplication.config.grails.mqtt.brokerUrl,
-                (String) grailsApplication.config.grails.mqtt.clientId,
-                persistence)
+        def client = new MqttClient((String) grailsApplication.config.localmqtt.host + ":" +
+                (String) grailsApplication.config.localmqtt.port,
+                (String) grailsApplication.config.grails.mqtt.clientId, persistence)
         def connOpts = new MqttConnectOptions()
         connOpts.setCleanSession(true)
         client.connect(connOpts)
@@ -303,8 +417,8 @@ class BootStrap {
         return shifted // == (rand.nextDouble() * (max-min)) + min
     }
 
-    private static final sendTheThingsIO(def values) {
-        def token = 'dFx2IA0cx1EO9WiPNGlEJf_rRrFidecUbP2N_8awRbU'
+    private final sendTheThingsIO(def values) {
+        def token = (String) grailsApplication.config.thethingsio.token
         Thread.start {
             def map = [values: values]
             def json = map as JSON
