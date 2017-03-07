@@ -11,7 +11,7 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
-grails.config.locations = [ "file:${userHome}/${appName}-config.properties" ]
+grails.config.locations = [ "file:home-automation-config.properties" ]
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
