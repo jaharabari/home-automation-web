@@ -103,27 +103,6 @@ class BootStrap {
 
                     brokerMessagingTemplate.convertAndSend '/topic/switches/status', json
 
-                    /*
-                    sendTheThingsIO(
-                        [
-                            [key: 'room_porch', value: payload[0] == 1],
-                            [key: 'room', value: payload[1] == 1],
-                            [key: 'counter', value: payload[2] == 1],
-                            [key: 'kitchen', value: payload[3] == 1],
-                            [key: 'bathroom', value: payload[4] == 1],
-                            [key: 'corridor', value: payload[5] == 1],
-                            [key: 'entry', value: payload[6] == 1],
-                            [key: 'bedroom', value: payload[7] == 1],
-                            [key: 'bedroom_porch', value: payload[8] == 1],
-                            [key: 'upper', value: payload[9] == 1],
-                            [key: 'laundry', value: payload[10] == 1],
-                            [key: 'recreation', value: payload[11] == 1],
-                            [key: 'sockets_bedroom_left', value: payload[12] == 1],
-                            [key: 'sockets_bedroom_right', value: payload[13] == 1]
-                        ]
-                    )
-                    */
-
                     servletContext.setAttribute(Constants.room_porch, json.room_porch)
                     servletContext.setAttribute(Constants.room, json.room)
                     servletContext.setAttribute(Constants.counter, json.counter)
@@ -136,6 +115,41 @@ class BootStrap {
                     servletContext.setAttribute(Constants.laundry, json.laundry)
                     servletContext.setAttribute(Constants.upper, json.upper)
                     servletContext.setAttribute(Constants.recreation, json.recreation)
+
+                    sendTheThingsIO(
+                            [
+                                    [key: 'room_porch', value: payload[0] == 1],
+                                    [key: 'room', value: payload[1] == 1],
+                                    [key: 'counter', value: payload[2] == 1],
+                                    [key: 'kitchen', value: payload[3] == 1],
+                                    [key: 'bathroom', value: payload[4] == 1],
+                                    [key: 'corridor', value: payload[5] == 1],
+                                    [key: 'entry', value: payload[6] == 1],
+                                    [key: 'bedroom', value: payload[7] == 1],
+                                    [key: 'bedroom_porch', value: payload[8] == 1],
+                                    [key: 'upper', value: payload[9] == 1],
+                                    [key: 'laundry', value: payload[10] == 1],
+                                    [key: 'recreation', value: payload[11] == 1]
+                            ]
+                    )
+
+                    def jsonToCloud = [
+                            room_porch: payload[0] == 1 ? 1 : 0,
+                            room: payload[1] == 1 ? 1 : 0,
+                            counter: payload[2] == 1 ? 1 : 0,
+                            kitchen: payload[3] == 1 ? 1 : 0,
+                            bathroom: payload[4] == 1 ? 1 : 0,
+                            corridor: payload[5] == 1 ? 1 : 0,
+                            entry: payload[6] == 1 ? 1 : 0,
+                            bedroom: payload[7] == 1 ? 1 : 0,
+                            bedroom_porch: payload[8] == 1 ? 1 : 0,
+                            laundry: payload[9] == 1 ? 1 : 0,
+                            upper: payload[10] == 1 ? 1 : 0,
+                            recreation: payload[11] == 1 ? 1 : 0
+                    ]
+                    // Base64.encode([1,1,1,1,1,1,1,1,1,1,1,1]).toString() == AQEBAQEBAQEBAQEB
+                    // Base64.encode([0,0,0,0,0,0,0,0,0,0,0,0]).toString() == AAAAAAAAAAAAAAAA
+                    connectAndPublishToCloud('switches/status', (jsonToCloud as JSON).toString(false))
                 } else if (s.equals('buttons/room_out_1')) {
                     def value = servletContext.getAttribute(Constants.room_porch) ?: 0
                     connectAndPublish('relays/' + Constants.room_porch +'/set', value == 1 ? '0' : '1')
@@ -373,6 +387,17 @@ class BootStrap {
 
     private static void mqttSubscribeRelaysTopics(def mqttClient) {
         mqttClient.subscribe('relays/' + Constants.room_porch + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.room + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.bathroom + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.bedroom_porch + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.bedroom + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.laundry + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.recreation + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.kitchen + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.counter + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.upper + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.entry + '/set', 0)
+        mqttClient.subscribe('relays/' + Constants.corridor + '/set', 0)
     }
 
     void connectAndPublish(String topic, String content) {
@@ -385,6 +410,23 @@ class BootStrap {
         client.connect(connOpts)
         def message = new MqttMessage(content.getBytes())
         message.setQos(0)
+        client.publish(topic, message)
+        client.disconnect()
+    }
+
+    void connectAndPublishToCloud(String topic, String content) {
+        def persistence = new MemoryPersistence()
+        def client = new MqttClient((String) grailsApplication.config.cloudmqtt.host + ":" +
+                (String) grailsApplication.config.cloudmqtt.port,
+                (String) grailsApplication.config.grails.mqtt.clientId, persistence)
+        def connOpts = new MqttConnectOptions()
+        connOpts.setCleanSession(true)
+        connOpts.setUserName(grailsApplication.config.cloudmqtt.user)
+        connOpts.setPassword(((String)grailsApplication.config.cloudmqtt.password).chars)
+        client.connect(connOpts)
+        def message = new MqttMessage(content.getBytes())
+        message.setQos(0)
+        message.setRetained(true)
         client.publish(topic, message)
         client.disconnect()
     }
@@ -429,10 +471,11 @@ class BootStrap {
             HttpClient httpclient = new DefaultHttpClient()
             HttpResponse response = httpclient.execute(httppost)
             HttpEntity entity = response.getEntity()
-            if (response.statusLine.statusCode == 201) {
-                def result = JSON.parse(entity.getContent(), 'UTF-8')
-                println result
+            if (response.statusLine.statusCode != 201) {
+                println "api.thethings.io erro http ${response.statusCode}"
             }
+//            def result = JSON.parse(entity.getContent(), 'UTF-8')
+//            println "api.thethings.io: ${result}"
         }
     }
 }
