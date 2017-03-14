@@ -2,7 +2,6 @@ import grails.converters.JSON
 import grails.util.Environment
 import home.automation.web.Constants
 import home.automation.web.SensorData
-import org.apache.http.HttpEntity
 import org.apache.http.HttpResponse
 import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpPost
@@ -58,7 +57,7 @@ class BootStrap {
             @Override
             void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
                 def date = new Date()
-                println date.format('yyyy-MM-dd-HH-mm-ss') + ' mqtt_messageArrived:' + s
+                println date.format('yyyy-MM-dd-HH-mm-ss') + ' ' + s
                 if (s.equals('sensors/temperature')) {
                     def str = new String(mqttMessage.payload)
                     def value = new BigDecimal(Double.parseDouble(str.trim()))
@@ -71,6 +70,8 @@ class BootStrap {
                     brokerMessagingTemplate.convertAndSend '/topic/sensors/temperature', str.trim()
 
                     sendTheThingsIO([[key: 'temperature', value: value.doubleValue()]])
+
+                    connectAndPublishToCloud('sensors/temperature', str.trim())
                 } else if (s.equals('sensors/humidity')) {
                     def str = new String(mqttMessage.payload)
                     def value = new BigDecimal(Double.parseDouble(str.trim()))
@@ -83,22 +84,24 @@ class BootStrap {
                     brokerMessagingTemplate.convertAndSend '/topic/sensors/humidity', str.trim()
 
                     sendTheThingsIO([[key: 'humidity', value: value.doubleValue()]])
+
+                    connectAndPublishToCloud('sensors/humidity', str.trim())
                 } else if (s.equals('switches/status')) {
                     def payload = mqttMessage.payload
 
                     def json = [
-                        room_porch: payload[0],
-                        room: payload[1],
-                        counter: payload[2],
-                        kitchen: payload[3],
-                        bathroom: payload[4],
-                        corridor: payload[5],
-                        entry: payload[6],
-                        bedroom: payload[7],
-                        bedroom_porch: payload[8],
-                        laundry: payload[9],
-                        upper: payload[10],
-                        recreation: payload[11]
+                        room_porch: new Integer(payload[0]),
+                        room: new Integer(payload[1]),
+                        counter: new Integer(payload[2]),
+                        kitchen: new Integer(payload[3]),
+                        bathroom: new Integer(payload[4]),
+                        corridor: new Integer(payload[5]),
+                        entry: new Integer(payload[6]),
+                        bedroom: new Integer(payload[7]),
+                        bedroom_porch: new Integer(payload[8]),
+                        laundry: new Integer(payload[9]),
+                        upper: new Integer(payload[10]),
+                        recreation: new Integer(payload[11])
                     ]
 
                     brokerMessagingTemplate.convertAndSend '/topic/switches/status', json
@@ -133,71 +136,62 @@ class BootStrap {
                             ]
                     )
 
-                    def jsonToCloud = [
-                            room_porch: payload[0] == 1 ? 1 : 0,
-                            room: payload[1] == 1 ? 1 : 0,
-                            counter: payload[2] == 1 ? 1 : 0,
-                            kitchen: payload[3] == 1 ? 1 : 0,
-                            bathroom: payload[4] == 1 ? 1 : 0,
-                            corridor: payload[5] == 1 ? 1 : 0,
-                            entry: payload[6] == 1 ? 1 : 0,
-                            bedroom: payload[7] == 1 ? 1 : 0,
-                            bedroom_porch: payload[8] == 1 ? 1 : 0,
-                            laundry: payload[9] == 1 ? 1 : 0,
-                            upper: payload[10] == 1 ? 1 : 0,
-                            recreation: payload[11] == 1 ? 1 : 0
-                    ]
+//                    println ((json as JSON).toString(true))
                     // Base64.encode([1,1,1,1,1,1,1,1,1,1,1,1]).toString() == AQEBAQEBAQEBAQEB
                     // Base64.encode([0,0,0,0,0,0,0,0,0,0,0,0]).toString() == AAAAAAAAAAAAAAAA
-                    connectAndPublishToCloud('switches/status', (jsonToCloud as JSON).toString(false))
+
+                    connectAndPublishToCloud('switches/status', (json as JSON).toString(false))
                 } else if (s.equals('buttons/room_out_1')) {
-                    def value = servletContext.getAttribute(Constants.room_porch) ?: 0
-                    connectAndPublish('relays/' + Constants.room_porch +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/room_out_2')) {
                     def value = servletContext.getAttribute(Constants.room) ?: 0
                     connectAndPublish('relays/' + Constants.room +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/room_out_2')) {
+                    def value = servletContext.getAttribute(Constants.room_porch) ?: 0
+                    connectAndPublish('relays/' + Constants.room_porch +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/room_1')) {
-                    def value = servletContext.getAttribute(Constants.counter) ?: 0
+                    def value = servletContext.getAttribute(Constants.kitchen) ?: 0
                     connectAndPublish('relays/' + Constants.kitchen +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/room_2')) {
-                    def value = servletContext.getAttribute(Constants.kitchen) ?: 0
+                    def value = servletContext.getAttribute(Constants.counter) ?: 0
                     connectAndPublish('relays/' + Constants.counter +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/corridor_1')) {
-                    def value = servletContext.getAttribute(Constants.bathroom) ?: 0
-                    connectAndPublish('relays/' + Constants.entry +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/corridor_2')) {
                     def value = servletContext.getAttribute(Constants.corridor) ?: 0
-                    connectAndPublish('relays/' + Constants.room +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/bathroom')) {
+                    connectAndPublish('relays/' + Constants.corridor +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/corridor_2')) {
                     def value = servletContext.getAttribute(Constants.entry) ?: 0
+                    connectAndPublish('relays/' + Constants.entry +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/bathroom')) {
+                    def value = servletContext.getAttribute(Constants.bathroom) ?: 0
                     connectAndPublish('relays/' + Constants.bathroom +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/entry')) {
-                    def value = servletContext.getAttribute(Constants.bedroom) ?: 0
+                    def value = servletContext.getAttribute(Constants.entry) ?: 0
                     connectAndPublish('relays/' + Constants.entry +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/bedroom')) {
                     def value = servletContext.getAttribute(Constants.bedroom) ?: 0
+                    connectAndPublish('relays/' + Constants.bedroom +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/bedroom_porch')) {
+                    def value = servletContext.getAttribute(Constants.bedroom_porch) ?: 0
                     connectAndPublish('relays/' + Constants.bedroom_porch +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/bedroom_out_1')) {
-                    def value = servletContext.getAttribute(Constants.laundry) ?: 0
-                    connectAndPublish('relays/' + Constants.bedroom_porch +'/set', value == 1 ? '0' : '1')
-                } else if (s.equals('buttons/bedroom_out_2')) {
-                    def value = servletContext.getAttribute(Constants.upper) ?: 0
+                    def value = servletContext.getAttribute(Constants.bedroom) ?: 0
                     connectAndPublish('relays/' + Constants.bedroom +'/set', value == 1 ? '0' : '1')
+                } else if (s.equals('buttons/bedroom_out_2')) {
+                    def value = servletContext.getAttribute(Constants.bedroom_porch) ?: 0
+                    connectAndPublish('relays/' + Constants.bedroom_porch +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/bed_left')) {
-                    def value = servletContext.getAttribute(Constants.recreation) ?: 0
+                    def value = servletContext.getAttribute(Constants.bedroom) ?: 0
                     connectAndPublish('relays/' + Constants.bedroom +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/bed_right')) {
-                    def value = servletContext.getAttribute(Constants.recreation) ?: 0
+                    def value = servletContext.getAttribute(Constants.bedroom) ?: 0
                     connectAndPublish('relays/' + Constants.bedroom +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/laundry')) {
-                    def value = servletContext.getAttribute(Constants.recreation) ?: 0
+                    def value = servletContext.getAttribute(Constants.laundry) ?: 0
                     connectAndPublish('relays/' + Constants.laundry +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/upper_1')) {
-                    def value = servletContext.getAttribute(Constants.recreation) ?: 0
-                    connectAndPublish('relays/' + Constants.recreation +'/set', value == 1 ? '0' : '1')
+                    def value = servletContext.getAttribute(Constants.upper) ?: 0
+                    connectAndPublish('relays/' + Constants.upper +'/set', value == 1 ? '0' : '1')
                 } else if (s.equals('buttons/upper_2')) {
                     def value = servletContext.getAttribute(Constants.recreation) ?: 0
-                    connectAndPublish('relays/' + Constants.upper +'/set', value == 1 ? '0' : '1')
+                    connectAndPublish('relays/' + Constants.recreation +'/set', value == 1 ? '0' : '1')
                 }
             }
 
@@ -470,7 +464,7 @@ class BootStrap {
             httppost.setHeader("Content-type", "application/json")
             HttpClient httpclient = new DefaultHttpClient()
             HttpResponse response = httpclient.execute(httppost)
-            HttpEntity entity = response.getEntity()
+            //HttpEntity entity = response.getEntity()
             if (response.statusLine.statusCode != 201) {
                 println "api.thethings.io erro http ${response.statusCode}"
             }
