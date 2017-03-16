@@ -114,7 +114,7 @@ class BootStrap {
                     servletContext.setAttribute(Constants.corridor, json.corridor)
                     servletContext.setAttribute(Constants.entry, json.entry)
                     servletContext.setAttribute(Constants.bedroom, json.bedroom)
-                    servletContext.setAttribute(Constants.bedroom_porch, json.bedroom_balcony)
+                    servletContext.setAttribute(Constants.bedroom_porch, json.bedroom_porch)
                     servletContext.setAttribute(Constants.laundry, json.laundry)
                     servletContext.setAttribute(Constants.upper, json.upper)
                     servletContext.setAttribute(Constants.recreation, json.recreation)
@@ -136,7 +136,8 @@ class BootStrap {
                             ]
                     )
 
-//                    println ((json as JSON).toString(true))
+                    println ((json as JSON).toString(true))
+
                     // Base64.encode([1,1,1,1,1,1,1,1,1,1,1,1]).toString() == AQEBAQEBAQEBAQEB
                     // Base64.encode([0,0,0,0,0,0,0,0,0,0,0,0]).toString() == AAAAAAAAAAAAAAAA
 
